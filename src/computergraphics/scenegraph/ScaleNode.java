@@ -30,7 +30,8 @@ public class ScaleNode extends Node {
 		gl.glPushMatrix();
 
 		// Apply scaling
-		gl.glScalef((float)scale.get(0), (float)scale.get(1), (float)scale.get(2));
+		gl.glScalef((float) scale.get(0), (float) scale.get(1),
+				(float) scale.get(2));
 
 		// Draw all children
 		for (int childIndex = 0; childIndex < getNumberOfChildren(); childIndex++) {

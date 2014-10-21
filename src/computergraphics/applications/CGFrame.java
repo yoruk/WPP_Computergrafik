@@ -9,10 +9,12 @@ package computergraphics.applications;
 import computergraphics.framework.AbstractCGFrame;
 import computergraphics.math.Vector3;
 import computergraphics.scenegraph.ColorNode;
+import computergraphics.scenegraph.Node;
 import computergraphics.scenegraph.RotationNode;
 import computergraphics.scenegraph.ScaleNode;
 import computergraphics.scenegraph.SingleTriangleNode;
 import computergraphics.scenegraph.TranslationNode;
+import computergraphics.scenegraph.TriangleMeshNode;
 
 /**
  * Application for the first exercise.
@@ -32,18 +34,18 @@ public class CGFrame extends AbstractCGFrame {
 	 */
 	public CGFrame(int timerInverval) {
 		super(timerInverval);
+		Node colorNode = new ColorNode(new Vector3(0.25, 0.25, 0.75));
+		Node scaleNode = new ScaleNode(new Vector3(2,2,2));
+		Node translationNode = new TranslationNode(new Vector3(-0.5f,-0.5f,0));		
+		Node rotationNode = new RotationNode(45, new Vector3(0,0,1));
+		Node triangleNode = new TriangleMeshNode();
 		
-		ColorNode colorNode = new ColorNode(new Vector3(0.25, 0.25, 0.75));
-		ScaleNode scaleNode = new ScaleNode(new Vector3(2.0, 2.0, 2.0)); // 1.1b
-		TranslationNode translationNode = new TranslationNode(new Vector3(1.0f, 1.0f, -1.0f)); // 1.2a
-		SingleTriangleNode triangleNode = new SingleTriangleNode(new Vector3(0.0f, 1.0f, 0.0f));
-		RotationNode rotationNode = new RotationNode(45, new Vector3(0.0f, 0.0f, 1.0f));
 		
-		getRoot().addChild(rotationNode);
-		rotationNode.addChild(colorNode);
-		colorNode.addChild(translationNode);
-		translationNode.addChild(scaleNode);
-		scaleNode.addChild(triangleNode);
+		getRoot().addChild(colorNode);
+		colorNode.addChild(scaleNode);		
+		scaleNode.addChild(translationNode);
+		translationNode.addChild(rotationNode);
+		rotationNode.addChild(triangleNode);
 	}
 
 	/*
@@ -60,6 +62,6 @@ public class CGFrame extends AbstractCGFrame {
 	 * Program entry point.
 	 */
 	public static void main(String[] args) {
-		new CGFrame(1000);
+		CGFrame gc = new CGFrame(1000);
 	}
 }

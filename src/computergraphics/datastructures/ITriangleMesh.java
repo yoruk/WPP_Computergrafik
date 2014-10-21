@@ -19,8 +19,10 @@ public interface ITriangleMesh {
      * 
      * @param t
      *            Container object to represent a triangle.
+     *            
+     * @return Index of the triangle in the triangle list.
      */
-    public void addTriangle(Triangle t);
+    public int addTriangle(Triangle t);
 
     /**
      * Add a new vertex to the vertex list. The new vertex is appended to the
@@ -69,4 +71,7 @@ public interface ITriangleMesh {
      * Clear mesh - remove all triangles and vertices.
      */
     public void clear();
+    
+    public void calcNormals();
+    
 }

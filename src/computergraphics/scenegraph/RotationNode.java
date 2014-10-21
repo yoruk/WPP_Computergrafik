@@ -16,9 +16,8 @@ public class RotationNode extends Node {
 
 	private final float angle;
 	private final Vector3 rotationAxis = new Vector3();
-	
 	public RotationNode(float angle , Vector3 rotationAxis) {
-		this.angle = angle;
+		this.angle=angle;
 		this.rotationAxis.copy(rotationAxis);
 	}
 
@@ -28,7 +27,7 @@ public class RotationNode extends Node {
 		gl.glPushMatrix();
 
 		// Apply scaling
-		gl.glRotatef(angle, (float)rotationAxis.get(0), (float)rotationAxis.get(1),	(float)rotationAxis.get(2));
+		gl.glRotatef(angle, (float) rotationAxis.get(0), (float) rotationAxis.get(1),	(float) rotationAxis.get(2));
 
 		// Draw all children
 		for (int childIndex = 0; childIndex < getNumberOfChildren(); childIndex++) {

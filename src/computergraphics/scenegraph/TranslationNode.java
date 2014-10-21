@@ -13,12 +13,12 @@ import computergraphics.math.Vector3;
 */
 
 public class TranslationNode extends Node {
+	
 	/**
 	 * Translation used in this node. The Vector3 indicates translations
 	 * of child nodes
 	 */
 	private final Vector3 translation = new Vector3();
-	
 	public TranslationNode(Vector3 translation) {
 		this.translation.copy(translation);
 	}
@@ -29,15 +29,16 @@ public class TranslationNode extends Node {
 		gl.glPushMatrix();
 
 		// Apply scaling
-		gl.glTranslatef((float)translation.get(0), (float)translation.get(1), (float)translation.get(2));
+		gl.glTranslatef((float) translation.get(0), (float) translation.get(1),	(float) translation.get(2));
 
 		// Draw all children
-		for(int childIndex = 0; childIndex < getNumberOfChildren(); childIndex++) {
+		for (int childIndex = 0; childIndex < getNumberOfChildren(); childIndex++) {
 			getChildNode(childIndex).drawGl(gl);
 		}
 
 		// Restore original state
 		gl.glPopMatrix();
+
 	}
 
 }
