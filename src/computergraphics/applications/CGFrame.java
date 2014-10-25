@@ -42,10 +42,7 @@ public class CGFrame extends AbstractCGFrame {
 		
 		
 		getRoot().addChild(colorNode);
-		colorNode.addChild(scaleNode);		
-		scaleNode.addChild(translationNode);
-		translationNode.addChild(rotationNode);
-		rotationNode.addChild(triangleNode);
+		colorNode.addChild(triangleNode);
 	}
 
 	/*

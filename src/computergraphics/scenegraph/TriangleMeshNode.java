@@ -22,6 +22,7 @@ public class TriangleMeshNode extends Node {
 	private int index=-1;
 
 	public TriangleMeshNode() {
+		/*
 		mesh=new TriangleMesh();		
 
 		int p0,p1,p2,p3,p4;
@@ -41,7 +42,15 @@ public class TriangleMeshNode extends Node {
 		mesh.addTriangle(tria);		
 		
 		tria=new Triangle(p0,p2,p3);
-		mesh.addTriangle(tria);
+		mesh.addTriangle(tria);*/
+		
+		
+		
+		mesh=TriangleMesh.genrateMesh(800, 800);
+		
+		
+		//mesh=TriangleMesh.picToTriangelMesh("D:\\HAW\\Semester6\\computergrafik\\workspace\\Computergrafik2\\color.png");
+		
 	}
 
 	@Override
@@ -50,7 +59,7 @@ public class TriangleMeshNode extends Node {
 		
 		if(index==-1){
 			int nr=mesh.getNumberOfTriangles();
-			mesh.calcNormals();
+			//mesh.calcNormals();
 			Triangle tria;
 			Vector3 normal;
 			Vertex a,b,c;

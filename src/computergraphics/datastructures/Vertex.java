@@ -101,4 +101,11 @@ public class Vertex {
 	public void setColor(Vector3 color) {
 		this.color.copy(color);
 	}
+	
+	/**
+	 * @param normal
+	 */
+	public void setPosition(Vector3 pos) {
+		this.position.copy(pos);
+	}
 }
