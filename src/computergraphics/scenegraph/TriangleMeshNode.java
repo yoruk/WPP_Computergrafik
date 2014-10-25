@@ -44,13 +44,16 @@ public class TriangleMeshNode extends Node {
 		tria=new Triangle(p0,p2,p3);
 		mesh.addTriangle(tria);*/
 		
+		//mesh=TriangleMesh.genrateMesh(200, 200);
 		
+//		mesh = TriangleMesh.picToTriangelMesh("Full_Moon_Luc_Viatour_100.png");
+//		mesh = TriangleMesh.colorMesh(mesh, "Full_Moon_Luc_Viatour_100.png");
+//		mesh = TriangleMesh.terraformMesh(mesh, 1.0f, "Full_Moon_Luc_Viatour_100.png");
 		
-		mesh=TriangleMesh.genrateMesh(800, 800);
-		
-		
-		//mesh=TriangleMesh.picToTriangelMesh("D:\\HAW\\Semester6\\computergrafik\\workspace\\Computergrafik2\\color.png");
-		
+		mesh = TriangleMesh.picToTriangelMesh("color_100.png");
+		mesh = TriangleMesh.colorMesh(mesh, "color_100.png");
+		mesh = TriangleMesh.terraformMesh(mesh, 0.2f, "heightField_100.png");
+//		mesh = TriangleMesh.prozTerraformMesh(mesh, 0.2f);
 	}
 
 	@Override
@@ -59,7 +62,7 @@ public class TriangleMeshNode extends Node {
 		
 		if(index==-1){
 			int nr=mesh.getNumberOfTriangles();
-			//mesh.calcNormals();
+			mesh.calcNormals();
 			Triangle tria;
 			Vector3 normal;
 			Vertex a,b,c;

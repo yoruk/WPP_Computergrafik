@@ -14,6 +14,7 @@ import javax.imageio.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.math.*;
 
 import computergraphics.math.Vector3;
 
@@ -93,13 +94,13 @@ public class TriangleMesh implements ITriangleMesh {
 		triangleList.clear();
 	}
 	
-	private List<Triangle> calcNormals(List<Triangle> tList){
-		LinkedList<Triangle> temp=new LinkedList<Triangle>(tList);
+	private List<Triangle> calcNormals(List<Triangle> tList) {
 		Vector3 normal;
-		Vector3 a=new Vector3();
-		Vector3 b=new Vector3();
-		Vector3 c=new Vector3();
-		for(Triangle t : temp){
+		Vector3 a = new Vector3();
+		Vector3 b = new Vector3();
+		Vector3 c = new Vector3();
+		
+		for(Triangle t : tList){
 			a.copy(getVertex(t.getA()).getPosition());
 			b.copy(getVertex(t.getB()).getPosition());
 			c.copy(getVertex(t.getC()).getPosition());
@@ -113,7 +114,7 @@ public class TriangleMesh implements ITriangleMesh {
 			t.setNormal(normal);
 		}
 		
-		return temp;
+		return tList;
 	}
 	
 	@Override
@@ -137,7 +138,7 @@ public class TriangleMesh implements ITriangleMesh {
 		for(int iy=0;iy<z-1;iy++){
 			for(int ix=0;ix<x-1;ix++){
 				mesh.addTriangle(new Triangle(ix+iy*x, ix+1+iy*x, ix+(iy+1)*x));
-				//mesh.addTriangle(new Triangle( ix+1+iy*x,ix+(iy+1)*x ,ix+1+(iy+1)*x  ));
+				mesh.addTriangle(new Triangle( ix+1+iy*x,ix+(iy+1)*x ,ix+1+(iy+1)*x  ));
 			}
 		}/**/
 		
@@ -165,7 +166,9 @@ public class TriangleMesh implements ITriangleMesh {
 	static public ITriangleMesh picToTriangelMesh(String datName){
 		BufferedImage bild=null;
 		ITriangleMesh mesh;
+		Vertex tmpVertex;
 		Color farbe;
+		
 		int x,z;
 		
 		try {
@@ -178,19 +181,83 @@ public class TriangleMesh implements ITriangleMesh {
 		x=bild.getWidth();
 		z=bild.getHeight();
 		mesh=TriangleMesh.genrateMesh(x, z);
+
+		return mesh;		
+	}
+	
+	static public ITriangleMesh colorMesh(ITriangleMesh mesh , String datName) {
+		BufferedImage bild = null;
+		Vertex tmpVertex;
+		Color farbe;
+		int x,z;
 		
+		try {
+			bild = ImageIO.read(new File(datName));
+		} catch (IOException e) {			
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		
+		x=bild.getWidth();
+		z=bild.getHeight();
 		
 		for(int iz=0;iz<z;iz++){
 			for(int ix=0;ix<x;ix++){
 				farbe = new Color(bild.getRGB(ix,iz));
-				mesh.getVertex(ix+iz*x).setColor(new Vector3(farbe.getRed()/255.0, farbe.getGreen()/255.0,farbe.getBlue()/255.0));
+				tmpVertex = mesh.getVertex(ix+iz*x);
+				tmpVertex.setColor(new Vector3(farbe.getRed()/255.0, farbe.getGreen()/255.0,farbe.getBlue()/255.0));
 			}
 		}
 		
-		
-		
-		return mesh;		
+		return mesh;	
 	}
 	
+	static public ITriangleMesh terraformMesh(ITriangleMesh mesh, float scaleFactor, String datName) {
+		BufferedImage bild=null;
+		Vertex tmpVertex;
+		Color farbe;
+		int x,z;
+		
+		try {
+			bild = ImageIO.read(new File(datName));
+		} catch (IOException e) {			
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		
+		x=bild.getWidth();
+		z=bild.getHeight();
+		
+		for(int iz=0;iz<z;iz++){
+			for(int ix=0;ix<x;ix++){
+				tmpVertex = mesh.getVertex(ix+iz*x);
+				farbe = new Color(bild.getRGB(ix,iz));
+				tmpVertex.getPosition().set(1, (farbe.getRed()/255.0) * scaleFactor);
+			}
+		}
+		
+		return mesh;	
+	}
 
+	static public ITriangleMesh prozTerraformMesh(ITriangleMesh mesh, int x, int z) {
+		Vertex tmpVertex;
+		Color farbe;
+		double increment = 0;
+		
+		for(int i=0;i<mesh.getNumberOfVertices();i++){
+			tmpVertex = mesh.getVertex(i);
+			tmpVertex.getPosition().set(1,(double) Math.cos(i*0.01)/10);//Math.random());//Math.asin(i*Math.PI*2)
+			increment += 1/mesh.getNumberOfVertices();
+		}
+		
+//		for(int iz=0;iz<z;iz++){
+//			for(int ix=0;ix<x;ix++){
+//				tmpVertex = mesh.getVertex(ix+iz*x);
+//				farbe = new Color(bild.getRGB(ix,iz));
+//				tmpVertex.getPosition().set(1, (farbe.getRed()/255.0) );
+//			}
+//		}
+		
+		return mesh;	
+	}
 }

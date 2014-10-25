@@ -36,13 +36,15 @@ public class CGFrame extends AbstractCGFrame {
 		super(timerInverval);
 		Node colorNode = new ColorNode(new Vector3(0.25, 0.25, 0.75));
 		Node scaleNode = new ScaleNode(new Vector3(2,2,2));
-		Node translationNode = new TranslationNode(new Vector3(-0.5f,-0.5f,0));		
-		Node rotationNode = new RotationNode(45, new Vector3(0,0,1));
-		Node triangleNode = new TriangleMeshNode();
+		Node translationNode = new TranslationNode(new Vector3(-0.5f, 0, 0));		
+		Node rotationNode = new RotationNode(45, new Vector3(1,0,0));
+		Node triangleMeshNode = new TriangleMeshNode();
 		
 		
 		getRoot().addChild(colorNode);
-		colorNode.addChild(triangleNode);
+		colorNode.addChild(translationNode);
+		translationNode.addChild(rotationNode);
+		rotationNode.addChild(triangleMeshNode);
 	}
 
 	/*
