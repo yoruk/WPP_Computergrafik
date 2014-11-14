@@ -39,9 +39,8 @@ public class TriangleMesh implements ITriangleMesh {
 	 * @see computergraphics.datastructures.ITriangleMesh#addTriangle(computergraphics.datastructures.Triangle)
 	 */
 	@Override
-	public int addTriangle(Triangle t) {
+	public void addTriangle(Triangle t) {
 		triangleList.add(t);
-		return triangleList.size()-1;
 	}
 
 	/* (non-Javadoc)
@@ -140,25 +139,7 @@ public class TriangleMesh implements ITriangleMesh {
 				mesh.addTriangle(new Triangle(ix+iy*x, ix+1+iy*x, ix+(iy+1)*x));
 				mesh.addTriangle(new Triangle( ix+1+iy*x,ix+(iy+1)*x ,ix+1+(iy+1)*x  ));
 			}
-		}/**/
-		
-		/*
-		for(int i=0; i < x*y ;i++){
-			if(((i==0 ) || (i%x!=0)) && (i<x*y-x)){
-				mesh.addTriangle(new Triangle(i, i+1, i+x));
-				System.out.println(i + " " + (i+1) +" " + (i+x));
-			}
-							
 		}
-		
-		for(int i=1; i < x*y ;i++){
-			if((i%x!=0) &&(i<x*y-x)){
-				mesh.addTriangle(new Triangle(i, i+(x-1), i+x));
-				System.out.println("U"+ i + " " + (i+1) +" " + (i+x));
-			}
-		}
-		*/
-
 		System.out.println("Mesh angelegt");
 		return mesh;
 	}
@@ -166,9 +147,6 @@ public class TriangleMesh implements ITriangleMesh {
 	static public ITriangleMesh picToTriangelMesh(String datName){
 		BufferedImage bild=null;
 		ITriangleMesh mesh;
-		Vertex tmpVertex;
-		Color farbe;
-		
 		int x,z;
 		
 		try {
@@ -241,23 +219,43 @@ public class TriangleMesh implements ITriangleMesh {
 
 	static public ITriangleMesh prozTerraformMesh(ITriangleMesh mesh, int x, int z) {
 		Vertex tmpVertex;
-		Color farbe;
-		double increment = 0;
+		double xp,yp,zp;		
 		
-		for(int i=0;i<mesh.getNumberOfVertices();i++){
-			tmpVertex = mesh.getVertex(i);
-			tmpVertex.getPosition().set(1,(double) Math.cos(i*0.01)/10);//Math.random());//Math.asin(i*Math.PI*2)
-			increment += 1/mesh.getNumberOfVertices();
-		}
-		
-//		for(int iz=0;iz<z;iz++){
-//			for(int ix=0;ix<x;ix++){
-//				tmpVertex = mesh.getVertex(ix+iz*x);
-//				farbe = new Color(bild.getRGB(ix,iz));
-//				tmpVertex.getPosition().set(1, (farbe.getRed()/255.0) );
-//			}
-//		}
-		
+		for(int iz=0;iz<z;iz++){
+			for(int ix=0;ix<x;ix++){
+				tmpVertex = mesh.getVertex(ix+iz*x);
+				xp=tmpVertex.getPosition().get(0);
+				zp=tmpVertex.getPosition().get(2);
+				tmpVertex.getPosition().set(1,(double)(xp-0.5)*(xp-0.5)*2+(zp-0.5)*(zp-0.5)*2); //2x²+2z²=y
+				yp=tmpVertex.getPosition().get(1);
+				
+				tmpVertex.setColor(new Vector3(xp, yp, zp));
+			}
+		}		
 		return mesh;	
+	}
+
+	@Override
+	public void setTextureFilename(String filename) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getTextureFilename() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addTextureCoordinate(Vector3 texCoord) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Vector3 getTextureCoordinate(int index) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

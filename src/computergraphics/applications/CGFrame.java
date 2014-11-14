@@ -15,6 +15,7 @@ import computergraphics.scenegraph.ScaleNode;
 import computergraphics.scenegraph.SingleTriangleNode;
 import computergraphics.scenegraph.TranslationNode;
 import computergraphics.scenegraph.TriangleMeshNode;
+import computergraphics.scenegraph.VertexShaderNode;
 
 /**
  * Application for the first exercise.
@@ -34,11 +35,11 @@ public class CGFrame extends AbstractCGFrame {
 	 */
 	public CGFrame(int timerInverval) {
 		super(timerInverval);
-		Node colorNode = new ColorNode(new Vector3(0.25, 0.25, 0.75));
+		Node colorNode = new VertexShaderNode(new Vector3(0.25, 0.25, 0.75));
 		Node scaleNode = new ScaleNode(new Vector3(2,2,2));
-		Node translationNode = new TranslationNode(new Vector3(-0.5f, 0, 0));		
+		Node translationNode = new TranslationNode(new Vector3(-0.5f, 0, -0));//.5f		
 		Node rotationNode = new RotationNode(45, new Vector3(1,0,0));
-		Node triangleMeshNode = new TriangleMeshNode();
+		Node triangleMeshNode = new TriangleMeshNode("cube.obj");
 		
 		
 		getRoot().addChild(colorNode);
