@@ -2,6 +2,8 @@ package computergraphics.scenegraph;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -28,37 +30,14 @@ import computergraphics.math.Vector3;
 
 public class TriangleMeshNode extends Node {
 	private ITriangleMesh mesh;
-	private Vector3 color=new Vector3(0,0.5,0);
+
 	private int index=-1;
 
 	public TriangleMeshNode() {
-		/*
-		mesh=new TriangleMesh();		
-
-		int p0,p1,p2,p3,p4;
-		Triangle tria;
-		
-		p0=mesh.addVertex(new Vertex(new Vector3(0,0,0),new Vector3(),new Vector3(1,0,0)));
-		p1=mesh.addVertex(new Vertex(new Vector3(1,0,0),new Vector3(),new Vector3(0,1,0)));
-		p2=mesh.addVertex(new Vertex(new Vector3(0,0,1),new Vector3(),new Vector3(0,0,1)));
-		p3=mesh.addVertex(new Vertex(new Vector3(0,1,0),new Vector3(),new Vector3(1,1,0)));
-		tria=new Triangle(p0,p1,p2);
-		mesh.addTriangle(tria);
-
-		tria=new Triangle(p0,p1,p3);
-		mesh.addTriangle(tria);
-		
-		tria=new Triangle(p1,p2,p3);
-		mesh.addTriangle(tria);		
-		
-		tria=new Triangle(p0,p2,p3);
-		mesh.addTriangle(tria);*/
 		
 		//mesh=TriangleMesh.genrateMesh(200, 200);
 		
-		
-		
-		
+
 //		mesh = TriangleMesh.picToTriangelMesh("Full_Moon_Luc_Viatour_800.png");
 //		mesh = TriangleMesh.colorMesh(mesh, "Full_Moon_Luc_Viatour_800.png");
 //		mesh = TriangleMesh.terraformMesh(mesh, 1.0f, "Full_Moon_Luc_Viatour_800.png");
@@ -72,6 +51,17 @@ public class TriangleMeshNode extends Node {
 		mesh = TriangleMesh.prozTerraformMesh(mesh,400,400);
 	}
 	
+	public TriangleMeshNode(String textur , String heightField){
+		mesh = TriangleMesh.picToTriangelMesh(textur);
+		mesh = TriangleMesh.colorMesh(mesh, textur);
+		mesh.setTextureFilename(textur);
+		mesh = TriangleMesh.terraformMesh(mesh, 0.2f, heightField);
+	}
+	
+	public TriangleMeshNode(TriangleMesh mesh){
+		this.mesh=mesh;
+	}
+	
 	public TriangleMeshNode(String fileName){
 		mesh=new TriangleMesh_tex();
 		ObjIO objIO = new ObjIO();
@@ -80,7 +70,7 @@ public class TriangleMeshNode extends Node {
 
 	@Override
 	public void drawGl(GL2 gl) {
-		gl.glColor3f((float) color.get(0),(float) color.get(1),(float) color.get(2));
+		//gl.glColor3f((float) color.get(0),(float) color.get(1),(float) color.get(2));
 		
 		if(index==-1){
 			int nr;		
@@ -108,8 +98,14 @@ public class TriangleMeshNode extends Node {
 			mesh.calcNormals();
 			index = gl.glGenLists(1);//quelle : http://www.songho.ca/opengl/gl_displaylist.html
 			
-			if(texture!=null)
-				gl.glBindTexture(GL.GL_TEXTURE_2D, texture.getTextureObject());
+			if(texture!=null){
+				//quelle : https://open.gl/textures
+				//quelle : http://docs.gl/gl3/glTexParameter
+				gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
+			    gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+			    gl.glBindTexture(GL.GL_TEXTURE_2D, texture.getTextureObject());
+			}			
+			
 			
 			gl.glNewList(index,GL2.GL_COMPILE);
 			gl.glBegin(GL2.GL_TRIANGLES);
@@ -120,11 +116,7 @@ public class TriangleMeshNode extends Node {
 				
 				a=mesh.getVertex(tria.getA());
 				b=mesh.getVertex(tria.getB());
-				c=mesh.getVertex(tria.getC());				
-				
-//				avt=mesh.getTextureCoordinate(tria.getA()%4);
-//				bvt=mesh.getTextureCoordinate(tria.getB()%4);
-//				cvt=mesh.getTextureCoordinate(tria.getC()%4);			
+				c=mesh.getVertex(tria.getC());						
 				
 				avt=mesh.getTextureCoordinate(tria.getTextureCoordinate(0));
 				bvt=mesh.getTextureCoordinate(tria.getTextureCoordinate(1));
@@ -159,5 +151,64 @@ public class TriangleMeshNode extends Node {
 			getChildNode(childIndex).drawGl(gl);
 		}
 	}
+	
+	public Vector3 getY2(Vector3 onPos){
+		Vertex vert;
+		Vector3 p , nearestP1=new Vector3();
+		double dist, nerestDist1=Double.MAX_VALUE;
+		
+		for(int i=0;i<mesh.getNumberOfVertices();i++){
+			vert=mesh.getVertex(i);
+			p=vert.getPosition();
+			dist=p.subtract(onPos).getNorm();
+			
+			if(dist<nerestDist1){
+				nerestDist1=dist;
+				nearestP1=p;
+			}
+			
+		}
+		onPos.set(1, nearestP1.get(1)*10);
+		return onPos;
+
+	}
+	
+	public Vector3 getY(Vector3 onPos){
+		double xk=0,yk=0;
+		double xg=Double.MAX_VALUE,yg=Double.MAX_VALUE;
+		Vector3 p, nearestK =null,nearestG = null;
+		
+		double aktuellerX , aktuellerY;
+		
+		
+		for(int i=0;i<mesh.getNumberOfVertices();i++){
+			p=mesh.getVertex(i).getPosition();
+			aktuellerX=p.get(0);
+			aktuellerY=p.get(2);
+			if(onPos.get(0)>= aktuellerX&& xk<=aktuellerX) 
+				if((onPos.get(2)>=aktuellerY || onPos.get(2)>=1) && yk<=aktuellerY){
+					xk=p.get(0);
+					yk=p.get(2);
+					nearestK=p;				
+				}
+			
+
+			if((onPos.get(0)<=aktuellerX || onPos.get(0)>=1 ) && xg>=aktuellerX)
+				if(onPos.get(2)<=aktuellerY && yg>=aktuellerY){
+					xg=p.get(0);
+					yg=p.get(2);
+					nearestG=p;				
+				}
+			
+		}			
+		if(nearestG==null||nearestK==null){
+			System.out.println("error");
+		}
+		
+		onPos.set(1, (nearestK.get(1)+nearestG.get(1))/2);
+		return onPos;
+
+	}
+	
 
 }

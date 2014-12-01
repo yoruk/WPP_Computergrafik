@@ -22,6 +22,10 @@ public class TranslationNode extends Node {
 	public TranslationNode(Vector3 translation) {
 		this.translation.copy(translation);
 	}
+	
+	public void setTranslation(Vector3 newTranslation){
+		translation.copy(newTranslation);
+	}
 
 	@Override
 	public void drawGl(GL2 gl) {

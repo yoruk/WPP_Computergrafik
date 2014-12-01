@@ -27,7 +27,7 @@ public class VertexShaderNode extends Node {
 
 		// Use a Phong shader
 		shader = new CgGlslShader("shader/vertex_shader_texture.glsl",
-				"shader/fragment_shader_texture.glsl");
+				"shader/fragment_shader_texture.glsl");		
 	}
 
 	@Override

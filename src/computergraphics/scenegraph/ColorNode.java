@@ -28,6 +28,9 @@ public class ColorNode extends Node {
 		// Use a Phong shader
 		shader = new CgGlslShader("shader/vertex_shader_phong_shading.glsl",
 				"shader/fragment_shader_phong_shading.glsl");
+//		shader = new CgGlslShader("shader/vertex_shader_texture.glsl",
+//				"shader/fragment_shader_phong_texture.glsl");
+				
 	}
 
 	@Override
